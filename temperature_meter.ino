@@ -14,6 +14,62 @@ float temperature_2_value=0;
 float temperature_3_value=0;
 float temperature_4_value=0;
 
+
+byte degreeC[]={
+  B11100,
+  B10100,
+  B11100,
+  B00111,
+  B01000,
+  B01000,
+  B01000,
+  B00111
+  };
+
+  byte water[] = {
+  B00100,
+  B01010,
+  B01010,
+  B10001,
+  B10001,
+  B10001,
+  B01110,
+  B00000
+};
+
+
+
+byte coil[] = {
+  B00011,
+  B01100,
+  B10000,
+  B01110,
+  B00001,
+  B11110,
+  B10000,
+  B01110
+};
+byte tank1[] = {
+  B00001,
+  B01001,
+  B11001,
+  B01001,
+  B01001,
+  B11101,
+  B00001,
+  B11111 
+};
+byte tank2[] = {
+  B00001,
+  B11101,
+  B00101,
+  B11101,
+  B10001,
+  B11101,
+  B00001,
+  B11111
+};
+
 OneWire oneWirePin_1(temperatue_sensor_1_pin);
 OneWire oneWirePin_2(temperatue_sensor_2_pin);
 OneWire oneWirePin_3(temperatue_sensor_3_pin);
@@ -29,6 +85,7 @@ DallasTemperature sensor_4(&oneWirePin_4);
 
 
 LiquidCrystal_I2C lcd(0x27,16,2);
+
 void setup() {
 
   Serial.begin(9600);
@@ -39,7 +96,14 @@ void setup() {
   sensor_4.begin();
   
   lcd.begin();
-  lcd.backlight(); 
+   lcd.createChar(0,degreeC);
+  lcd.createChar(1,tank1);
+  lcd.createChar(2,tank2);
+  lcd.createChar(3,water);
+  lcd.createChar(4,coil);
+  
+  lcd.home();
+//  lcd.backlight(); 
 
 }
 
@@ -59,21 +123,69 @@ void loop() {
   temperature_3_value=sensor_3.getTempCByIndex(0);
   temperature_4_value=sensor_4.getTempCByIndex(0);
 
+
+  lcd.clear();
+  
+  // printing degree C symbol
+  lcd.setCursor(6,0);
+  lcd.write(0);
+  lcd.setCursor(15,0);
+  lcd.write(0);
+  lcd.setCursor(6,1);
+  lcd.write(0);
+  lcd.setCursor(15,1);
+  lcd.write(0);
+
+  // printing tank1 symbol
+
+  lcd.setCursor(0,0);
+  lcd.write(1);
+
+  // printing tank2 symbol
+
+  lcd.setCursor(0,1);
+  lcd.write(2);
+
+  // printing water symbol
+
+  lcd.setCursor(8,0);
+  lcd.write(3);
+
+  // printing coil symbol
+
+  lcd.setCursor(8,1);
+  lcd.write(4);
+  
+
+
+  
+
+  lcd.setCursor(1,0);
+  lcd.print(temperature_1_value);
+  lcd.setCursor(9,0);
+  lcd.print(temperature_2_value);
+  lcd.setCursor(1,1);
+  lcd.print(temperature_3_value);
+  lcd.setCursor(9,1);
+  lcd.print(temperature_4_value);
+ delay(800);
+  
+
 //  Serial.print("Temperature is ----   ");
 //  Serial.print(temperature);
   
-  lcd.setCursor(0,0);
-  lcd.print(temperature_1_value);
-  
-  lcd.setCursor(8,0);
-  lcd.print(temperature_2_value);
-  
-  lcd.setCursor(0,1);
-  lcd.print(temperature3_value);
-
-  
-  lcd.setCursor(8,1);
-  lcd.print(temperature_4_value);
+//  lcd.setCursor(0,0);
+//  lcd.print(temperature_1_value);
+//  
+//  lcd.setCursor(8,0);
+//  lcd.print(temperature_2_value);
+//  
+//  lcd.setCursor(0,1);
+//  lcd.print(temperature3_value);
+//
+//  
+//  lcd.setCursor(8,1);
+//  lcd.print(temperature_4_value);
   
   
 delay(200);

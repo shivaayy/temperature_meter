@@ -14,6 +14,12 @@ float temperature_2_value=0;
 float temperature_3_value=0;
 float temperature_4_value=0;
 
+long int start_millisecond;
+long int current_millisecond;
+
+int hours;
+int minutes;
+int seconds;
 
 byte degreeC[]={
   B11100,
@@ -39,16 +45,16 @@ byte degreeC[]={
 
 
 
-byte coil[] = {
-  B00011,
-  B01100,
-  B10000,
-  B01110,
-  B00001,
-  B11110,
-  B10000,
-  B01110
-};
+//byte coil[] = {
+//  B00011,
+//  B01100,
+//  B10000,
+//  B01110,
+//  B00001,
+//  B11110,
+//  B10000,
+//  B01110
+//};
 byte tank1[] = {
   B00001,
   B01001,
@@ -73,14 +79,14 @@ byte tank2[] = {
 OneWire oneWirePin_1(temperatue_sensor_1_pin);
 OneWire oneWirePin_2(temperatue_sensor_2_pin);
 OneWire oneWirePin_3(temperatue_sensor_3_pin);
-OneWire oneWirePin_4(temperatue_sensor_4_pin);
+//OneWire oneWirePin_4(temperatue_sensor_4_pin);
 
 
 
 DallasTemperature sensor_1(&oneWirePin_1); 
 DallasTemperature sensor_2(&oneWirePin_2); 
 DallasTemperature sensor_3(&oneWirePin_3); 
-DallasTemperature sensor_4(&oneWirePin_4); 
+//DallasTemperature sensor_4(&oneWirePin_4); 
 
 
 
@@ -90,17 +96,19 @@ void setup() {
 
   Serial.begin(9600);
 
+  start_millisecond=millis();
+
   sensor_1.begin();
   sensor_2.begin();
   sensor_3.begin();
-  sensor_4.begin();
+//  sensor_4.begin();
   
   lcd.begin();
    lcd.createChar(0,degreeC);
   lcd.createChar(1,tank1);
   lcd.createChar(2,tank2);
   lcd.createChar(3,water);
-  lcd.createChar(4,coil);
+//  lcd.createChar(4,coil);
   
   lcd.home();
 //  lcd.backlight(); 
@@ -114,14 +122,14 @@ void loop() {
   sensor_1.requestTemperatures();
   sensor_2.requestTemperatures();
   sensor_3.requestTemperatures();
-  sensor_4.requestTemperatures();
+//  sensor_4.requestTemperatures();
   
   Serial.print("Done  \n "); 
 
   temperature_1_value=sensor_1.getTempCByIndex(0);
   temperature_2_value=sensor_2.getTempCByIndex(0);
   temperature_3_value=sensor_3.getTempCByIndex(0);
-  temperature_4_value=sensor_4.getTempCByIndex(0);
+//  temperature_4_value=sensor_4.getTempCByIndex(0);
 
 
   lcd.clear();
@@ -133,8 +141,8 @@ void loop() {
   lcd.write(0);
   lcd.setCursor(6,1);
   lcd.write(0);
-  lcd.setCursor(15,1);
-  lcd.write(0);
+//  lcd.setCursor(15,1);
+//  lcd.write(0);
 
   // printing tank1 symbol
 
@@ -153,8 +161,8 @@ void loop() {
 
   // printing coil symbol
 
-  lcd.setCursor(8,1);
-  lcd.write(4);
+  // lcd.setCursor(8,1);
+  // lcd.write(4);
   
 
 
@@ -166,8 +174,27 @@ void loop() {
   lcd.print(temperature_2_value);
   lcd.setCursor(1,1);
   lcd.print(temperature_3_value);
+  // lcd.setCursor(9,1);
+  // lcd.print(temperature_4_value);
+
+  int millis_diff=current_millisecond-start_millisecond;
+  hours=millis_diff/3600000;
+  minutes=(millis_diff%3600000)/60000;
+  seconds=((millis_diff%3600000)%60000)/1000;
+  lcd.setCursor(13,1);
+  lcd.print(":");
+  lcd.setCursor(10,1);
+  lcd.print(":");
+  lcd.setCursor(14,1);
+  lcd.print(seconds);
+   lcd.setCursor(11,1);
+  lcd.print(minutes);
+  if(hours>=10)
+   lcd.setCursor(8,1);
+   else
   lcd.setCursor(9,1);
-  lcd.print(temperature_4_value);
+  lcd.print(hours);
+
  delay(800);
   
 

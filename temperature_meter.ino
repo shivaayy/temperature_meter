@@ -96,12 +96,12 @@ void loop()
   lcd.setCursor(0, 1);
   lcd.print("Alarm:");
   potentioMeterReading = analogRead(A3);
-  alarm_temp = map(potentioMeterReading, 0, 1024, -10, 311);
+  alarm_temp = map(potentioMeterReading, 0, 1024, -10, 83);
   // Serial.print("alarm temperature ----------------");
   // Serial.print(potentioMeterReading);
   lcd.setCursor(7, 1);
   lcd.print(alarm_temp);
-  if (temperature_1_value >= alarm_temp && alarm_temp >= -6)
+  if ((temperature_1_value >= alarm_temp || temperature_1_value==-127.00) && alarm_temp >= -6)
   {
     digitalWrite(buzzer, HIGH);
     // delay(200);
